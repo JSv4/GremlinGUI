@@ -1,0 +1,11 @@
+.diagram-container {
+  overflow: visible;
+  height: 100%;
+  width: 100%;
+}
+
+.diagram-container svg {
+  overflow: visible;
+  overflow-y: visible;
+  overflow-x: visible;
+}
