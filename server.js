@@ -15,20 +15,14 @@ if(process.env.NODE_ENV === 'production') {
   })
 }
 
-// where ever the built package is
-const buildFolder = '../build';// load the value in the server
-
-// at runtime
-app.set('views', path.join(__dirname, buildFolder));
-app.engine('html', require('ejs').renderFile);
-
-app.use(
-  '/static',
-  express.static(path.join(__dirname, `${buildFolder}/static`)),
-);
-
-app.get('/', function(req, res) {
-  res.sendFile('index.html');
+app.use(favicon(__dirname + '/build/favicon.ico'));
+// the __dirname is the current directory from where the script is running
+app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/ping', function (req, res) {
+ return res.send('pong');
 });
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+app.listen(port);
