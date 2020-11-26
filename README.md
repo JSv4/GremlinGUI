@@ -2,7 +2,7 @@
 
 Gremlin is the open source, low-code microservice framework designed for legal engineering, data extraction, and document analysis. Gremlin GUI is a React-based frontend for the separate Gremlin Server. It is licensed under the AGPL and is free and open source.
 
-### ENV Variables
+### ENV Variables (Development and Non-Heroku Deploys)
 
 You need to configure the target URL for the Gremlin backend. Create a file .env in the same folder as server.js. In production, you need this variable:
 
@@ -13,6 +13,12 @@ When you're not in production, system will look for the target URL in the follow
     REACT_APP_DEVELOPMENT_API_URL="<development bakend URL>"
 
 Define both to have the system switch as appropriate depending on where you deploy it.
+
+### ENV Variables (Heroku Deploys)
+
+If you're deploying on Heroku, you need to set the REACT_APP_PRODUCTION_API_URL environment variable in Heroku. You can do this via the *[Heroku Dashboard](https://devcenter.heroku.com/articles/config-vars#using-the-heroku-dashboard)* or via the Heroku CLI (again, this assumes you've configured the Heroku CLI):
+
+    heroku config:set REACT_APP_PRODUCTION_API_URL=[your gremlin backend url]
 
 ### Run the Development Server 
 
@@ -47,9 +53,8 @@ NOTE, if you want to use https and you have deployed to Heroku, you must upgrade
 
 ### LESS Styling
 
-I am relying on less-watcher to compile less files into css whenever changes are detected. 
-The alternative is "ejecting" my webpack config which sounds like a nightmare. Instructions
-on how this setup works are here: https://www.folio3.com/using-less-in-react-without-ejecting
+I was using a library that was heavily dependent on less style sheets. Rather than eject my webpack config, I used an approach instead would watch for changes to .less files and compile them to css. Instructions
+on how this setup works are here: https://www.folio3.com/using-less-in-react-without-ejecting. It's still in place here, but I'm not really using less style sheets anymore, so I may remove it.
 
 ### Acknowledgements
 
@@ -70,3 +75,6 @@ on how this setup works are here: https://www.folio3.com/using-less-in-react-wit
   - Axios
   - Redux
   - Redux-Thunk
+
+- Other Acknowledgements
+  - Special thanks to the *[logossim](https://github.com/renato-bohler/logossim)* project for the design inspirations in how use react-diagrams to power the pipeline edtiro.
