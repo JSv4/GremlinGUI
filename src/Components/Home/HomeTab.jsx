@@ -31,7 +31,7 @@ export default class AdminHomeTab extends PureComponent {
                 </Dimmer> : <></>}
             <div style={{width:'100%', display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginBottom:'1vh'}}>
                 <div>
-                    <Header size='massive' icon style={{fontSize:'2em'}}>
+                    <Header size='huge' icon style={{fontSize:'2em'}}>
                         <Icon name='dashboard'/>
                         System Dashboard
                         <Header.Subheader>

@@ -21,7 +21,7 @@ export const doc_script = `#Required Imports ###################################
 # will write out messages to the Gremlin UI (not implemented yet). Currently these
 # are stored in the underlying Celery logs.
 
-def pythonFunction(*args, docText=None, docType=None, docName=None, docByteObj=None, nodeInputs={}, jobInputs={}, previousData={}, logger=None **kwargs):
+def pythonFunction(*args, docText=None, docType=None, docName=None, docByteObj=None, nodeInputs={}, jobInputs={}, previousData={}, dataZip=None, logger=None **kwargs):
 
 	# logging - use the logger object passed in:
 		# 1) logger.info("...")

@@ -955,7 +955,7 @@ class AsyncApp extends Component {
         <Menu.Item
           key={`sidebar_button_${SidebarButtons.length+1}`}
           as='a'
-          onClick={() => this.handleTabChange(3, this.props.dispatch(fetchScripts()))}
+          onClick={() => this.handleTabChange(3, () => this.props.dispatch(fetchScripts()))}
         >
           <Icon name='code' />
           Scripts
