@@ -28,6 +28,8 @@ export default class JobSettings extends PureComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (!this.props.job) return false;
+        
         return (
             this.props.job.job_inputs!==nextProps.job.job_inputs
             &&
@@ -85,17 +87,17 @@ export default class JobSettings extends PureComponent {
                     theme={theme}
                     src={this.state.jobSettings}
                     collapseStringsAfterLength={collapseStringsAfter}
-                    onEdit={ !job.finished ? e => {
+                    onEdit={ job && !job.finished ? e => {
                                     let newSrc = e.updated_src;
                                     this.setState({jobSettings: newSrc});
                                 } : false
                     }
-                    onDelete={ !job.finished ? e => {
+                    onDelete={ job && !job.finished ? e => {
                                     let newSrc = e.updated_src;
                                     this.setState({jobSettings: newSrc});
                                 } : false
                     }
-                    onAdd={ !job.finished ? e => {
+                    onAdd={ job && !job.finished ? e => {
                                     let newSrc = e.updated_src;
                                     this.setState({jobSettings: newSrc});
                                 } : false
