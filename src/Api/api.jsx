@@ -167,8 +167,6 @@ export const getUsers = (selectedPage, searchString, role, token) => {
   });
 }
 
-//
-
 //########################## DOCUMENT API CALLS ##########################
 
 //Nice tutorial re: this approach and structuring: https://medium.com/@fakiolinho/handle-blobs-requests-with-axios-the-right-way-bb905bdb1c04
@@ -335,6 +333,31 @@ export const downloadJob = (jobId, token) => {
 }
 
 //##################### PYTHON SCRIPT API CALLS ######################
+
+export const uploadScriptDataFile =  (scriptId, data_file, token) => {
+
+  const data = new FormData();
+  data.append('data_file', data_file);
+
+  return request.post(`/PythonScripts/${scriptId}/upload_data/`, data, {
+    headers: {
+      'Content-Disposition': `attachment; filename=${data_file.name}`,
+      'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+      'Authorization': `Bearer ${token}`
+    },
+    timeout: 30000,
+  });
+};
+
+export const deleteScriptDataFile = (scriptId, token) => {
+  return request.get(`/PythonScripts/${scriptId}/delete_data/`, {
+    responseType: 'blob',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    timeout: 30000
+  });
+}
 
 export const downloadPythonScript = (scriptId, token) => {
   return request.get(`/PythonScripts/${scriptId}/exportArchive/`, {

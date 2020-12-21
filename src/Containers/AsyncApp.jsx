@@ -50,6 +50,9 @@ import {
   requestUpdateScript,
   clearSelectedScript,
   fetchSelectedScriptDetails,
+  requestUploadScriptDataFile,
+  requestDeleteScriptDataFile,
+  fetchScriptDetailsById,
   requestDownloadPythonScript,
   requestUploadPythonScript,
   requestCreateTestJobForPipeline,
@@ -606,6 +609,18 @@ class AsyncApp extends Component {
     this.props.dispatch(requestDownloadPythonScript(scriptId));
   }
 
+  handleDeleteScriptData = (scriptId) => {
+    this.props.dispatch(requestDeleteScriptDataFile(scriptId)).then(() => {
+      this.props.dispatch(fetchScriptDetailsById(scriptId));
+    });
+  }
+
+  handleUploadScriptData = (scriptId, file) => {
+    this.props.dispatch(requestUploadScriptDataFile(scriptId, file)).then(() => {
+      this.props.dispatch(fetchScriptDetailsById(scriptId));
+    }); 
+  }
+
   handleUploadScript = (file) => {
     this.props.dispatch(requestUploadPythonScript(file)).then(() => {
       this.props.dispatch(fetchScripts());
@@ -1016,6 +1031,8 @@ class AsyncApp extends Component {
           windowHeight = {windowHeight}
           detailsAreFetching = {scripts.detailsAreFetching}
           handleUpdateScript = {this.handleUpdateScript}
+          handleUploadScriptData = {this.handleUploadScriptData}
+          handleDeleteScriptData = {this.handleDeleteScriptData}
           handleDeleteScript = {this.handleDeleteScript}
           handleClearScript = {this.handleClearScript}
           handleRefreshScript = {this.handleRefreshScript}

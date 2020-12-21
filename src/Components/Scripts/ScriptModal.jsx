@@ -23,6 +23,7 @@ import "ace-builds/src-min-noconflict/theme-solarized_dark";
 import 'ace-builds';
 import "ace-builds/webpack-resolver";
 
+import { DataFileDropArea, DataFileManifest } from './DataFileTab';
 import ConfirmModal from '../Shared/ConfirmModal';
 import { InputResultTabs } from '../Layouts/Layouts';
 
@@ -140,8 +141,9 @@ export default class ScriptModal extends Component {
         });
     }
 
-    onConfirmSave = () => {
-        this.props.handleUpdateScript(this.state.localScriptObj);
+    onConfirmSave = (obj) => {
+        console.log("onConfirmSave", obj);
+        this.props.handleUpdateScript(obj);
     }
 
     onConfirmDelete = () => {
@@ -260,7 +262,18 @@ export default class ScriptModal extends Component {
         }  
     }
 
+
+    uploadDataArchive = (event) => {
+        if (this.props.selectedScriptData) {
+            event.preventDefault();
+            console.log(event.target.files[0]);
+            this.props.handleUploadScriptData(this.props.selectedScriptData.id, event.target.files[0]);
+        }
+    }
+
     render() {
+
+        const fileInputRef = React.createRef();
 
         const {
             collapseStringsAfter,
@@ -464,7 +477,37 @@ export default class ScriptModal extends Component {
                     </>}
                     panelTwoLabel="Install Log"
                 />),
-             (<>
+                (<>
+                    <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'flex-start', height:'100%'}}>
+                        <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', width:'100%'}}>
+                            {this.state.localScriptObj.data_file ?
+                                <Segment raised style={{width:'100%', marginBottom:'1vh'}}>
+                                     <Header as='h2'>
+                                        <Icon name='database' />
+                                        <Header.Content>
+                                        Script Data File
+                                        <Header.Subheader>Contents of uploaded data file (.zip files only).</Header.Subheader>
+                                        </Header.Content>
+                                    </Header>
+                                    <DataFileManifest data_file={this.state.localScriptObj.data_file}/>
+                                    <Button color='red' animated='vertical' onClick={() => this.props.handleDeleteScriptData(this.state.localScriptObj.id)}>
+                                        <Button.Content hidden>Data</Button.Content>
+                                        <Button.Content visible>
+                                            Delete <Icon name='trash' />
+                                        </Button.Content>
+                                    </Button>
+                                </Segment>
+                                :
+                                <>
+                                    <DataFileDropArea
+                                        onUpload={this.uploadDataArchive}
+                                    />
+                                </>
+                            }
+                        </div>
+                    </div>   
+                </>),
+                (<>
                 <Segment style={{marginBottom:'1vh'}}>
                     <Label attached='top'>Script Status</Label> 
                 </Segment>
@@ -529,7 +572,7 @@ export default class ScriptModal extends Component {
                     icon='cancel'
                     onClick={()=> this.props.handleScriptModalToggle()}
                 />
-                <Header icon='archive' content='Edit Script'/>
+                <Header icon='archive' content={`Edit Script: ${this.state.localScriptObj ? this.state.localScriptObj.human_name : ""}`}/>
                 <Modal.Content style={{flex:10, height:'90%'}}>
                     <LoadingIndicator/>
                     <Segment >
@@ -600,13 +643,22 @@ export default class ScriptModal extends Component {
                                         onClick={() => this.setSelectedTab(5)}
                                     >
                                         <Icon name='box' />
-                                        Packages
+                                        Python Packages
+                                    </Menu.Item>
+
+                                    <Menu.Item
+                                        name='data_file'
+                                        active={this.state.modalTab === 6}
+                                        onClick={() => this.setSelectedTab(6)}
+                                    >
+                                        <Icon name={this.state.localScriptObj.data_file ? "file archive" : "file archive outline"}/>
+                                        Data File
                                     </Menu.Item>
 
                                     <Menu.Item
                                         name='status'
-                                        active={this.state.modalTab === 6}
-                                        onClick={() => this.setSelectedTab(6)}
+                                        active={this.state.modalTab === 7}
+                                        onClick={() => this.setSelectedTab(7)}
                                     >
                                         <Icon name={this.state.localScriptObj.install_error ? 
                                             "warning sign" : "thumbs up outline"}

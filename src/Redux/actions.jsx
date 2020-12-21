@@ -24,6 +24,8 @@ import {
   runJobToNode,
   updateJobRequest,
 
+  uploadScriptDataFile,
+  deleteScriptDataFile,
   getAllPythonScripts,
   getPythonScriptById,
   downloadPythonScript,
@@ -856,7 +858,7 @@ export const requestUpdateScript = (scriptObj) => async (dispatch, getState) => 
         json_schema: scriptObj.json_schema,
         mode: scriptObj.mode,
         name: scriptObj.name,
-        required_package: scriptObj.required_package,
+        required_packages: scriptObj.required_packages,
         script: scriptObj.script,
         setup_script: scriptObj.setup_script,
         supported_file_types: scriptObj.supported_file_types,
@@ -1050,6 +1052,47 @@ export const requestDownloadPythonScript = (scriptId) => async (dispatch, getSta
   return Promise.resolve(false);
 }
 
+export const requestDeleteScriptDataFile = (scriptId) => async (dispatch, getState) => {
+  if (getState().auth.loggedIn) {
+    try {
+      let response = await deleteScriptDataFile(scriptId, Cookies.get('token'));
+      if (response.status===200) {
+        console.log("Delete data file response: ", response);
+        return true;
+      }
+    } 
+    catch (error) {
+      if (error.response) {
+        dispatch(showErrorToast(error.response.data.message));
+      } else {
+        dispatch(showErrorToast('Something went wrong while trying to delete the data file.'));
+      }
+    }
+  }
+  return false;
+  
+}
+
+export const requestUploadScriptDataFile = (scriptId, file) => async (dispatch, getState) => {
+  if (getState().auth.loggedIn) {
+    try {
+      let response = await uploadScriptDataFile(scriptId, file, Cookies.get('token'));
+      if (response.status===200) {
+        console.log("Upload data file response: ", response);
+        return true;
+      }
+    } 
+    catch (error) {
+      if (error.response) {
+        dispatch(showErrorToast(error.response.data.message));
+      } else {
+        dispatch(showErrorToast('Something went wrong while uploading this data file.'));
+      }
+    }
+  }
+  return false;
+}
+
 // Try to upload a script archive. NOTE - on success the selected script will be changed to id of new script.
 export const requestUploadPythonScript = (file) => async (dispatch, getState) => {
 
@@ -1077,6 +1120,35 @@ export const requestUploadPythonScript = (file) => async (dispatch, getState) =>
     loading: false
   });
   return Promise.resolve(false);
+}
+
+export const fetchScriptDetailsById = (scriptId) => async (dispatch, getState) => {
+  if (getState().auth.loggedIn) {
+    try {
+
+      dispatch({
+        type: SET_SCRIPT_DETAILS_LOADING,
+        loading:true
+      });
+
+      let token = Cookies.get('token');
+      let response = await getPythonScriptDetails(token, scriptId);
+      if (response.status===200) {
+        dispatch(receiveScriptDetails(response));
+      }
+    } 
+    catch (error) {
+      dispatch(showErrorToast("Error fetching script details: "+error));
+    }
+  }
+  else {
+    dispatch(showErrorToast("Not logged in!"));
+  }
+
+  dispatch({
+    type: SET_SCRIPT_DETAILS_LOADING,
+    loading:false
+  });
 }
 
 export const fetchSelectedScriptDetails = () => async (dispatch, getState) => {
