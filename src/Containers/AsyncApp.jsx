@@ -76,9 +76,11 @@ import {
   selectPipeline,
   refreshPipeline,
   loadFullPipeline,
+  changePipelinePage,
   requestCreatePipeline,
   requestUpdatePipeline,
   requestDownloadPipelineYAML,
+  requestDownloadPipelineZip,
   requestUploadPipelineYAML,
   requestDeletePipeline,
   setPipelineSearchString
@@ -493,6 +495,12 @@ class AsyncApp extends Component {
 // PIPELINE Actions
 ///////////////////////////////////////////////////////////////////////
 
+  handlePipelinePageChange = (pageNo) => {
+    this.props.dispatch(changePipelinePage(pageNo)).then(() => {
+      this.props.dispatch(fetchPipelines());
+    });
+  }
+
   setPipelineNameFilter = (filterString) => {
     this.props.dispatch(setPipelineSearchString(filterString));
   }
@@ -538,6 +546,10 @@ class AsyncApp extends Component {
 
   handleDownloadPipeline = (pipelineId) => {
     this.props.dispatch(requestDownloadPipelineYAML(pipelineId));
+  }
+
+  handleDownloadPipelineZip = (pipelineId) => {
+    this.props.dispatch(requestDownloadPipelineZip(pipelineId));
   }
 
   handleUnselectPipeline = () => {
@@ -857,7 +869,7 @@ class AsyncApp extends Component {
               handleUnselectPipeline={this.handleUnselectPipeline}
               selectedPipelineId={pipelines.selectedPipelineId}
               handlePipelineStepSelect={this.handleNodeSelect}
-              handleDownloadPipeline={this.handleDownloadPipeline}
+              handleDownloadPipeline={this.handleDownloadPipelineZip}
               selectedPipelineStepId={pipelinesteps.selectedPipelineStepId}
               handleAddPipelineNode={this.handleAddPipelineNode}
               refreshPipelineStepsForSelectedPipeline={this.refreshPipelineStepsForSelectedPipeline}
@@ -867,6 +879,7 @@ class AsyncApp extends Component {
               handleCreatePipelineEdge={this.handleCreatePipelineEdge}
               handleDeletePipelineEdge={this.handleDeletePipelineEdge}
               handleDeletePipeline={this.handleDeletePipeline}
+              handlePipelinePageChange={this.handlePipelinePageChange}
               handleNewPipelineModalToggle={this.handleNewPipelineModalToggle}
               setPipelineNameFilter={this.SetPipelineNameFilter}
               filterValue={application.pipelineNameFilter}

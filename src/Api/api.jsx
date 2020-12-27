@@ -458,6 +458,19 @@ export const updateScript = (scriptObj, token) => {
 
 //##################### PIPELINE API CALLS ######################
 
+export const exportPipelineZip = (pipelineId, token) => {
+  return request.get(
+    `/Pipelines/${pipelineId}/ExportToZip/`,
+    {
+      responseType: 'blob',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      timeout: 30000,
+    }
+  );
+}
+
 export const exportPipelineYAML = (pipelineId, token) => {
   return request.get(
     `/Pipelines/${pipelineId}/ExportToYAML/`,
@@ -472,11 +485,9 @@ export const exportPipelineYAML = (pipelineId, token) => {
 }
 
 export const uploadPipelineYAML = (file, token) => {
-
   const data = new FormData();
   data.append('file', file);
-
-  return request.post(`/UploadPipeline/`, data, {
+  return request.post(`/UploadPipelineZip/`, data, {
     headers: {
       'Content-Disposition': `attachment; filename=${file.name}`,
       'Content-Type': `multipart/form-data; boundary=${data._boundary}`,

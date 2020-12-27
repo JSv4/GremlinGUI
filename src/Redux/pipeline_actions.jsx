@@ -12,6 +12,7 @@ import {
     getPipelineById,
     getFullPipelineById,
     exportPipelineYAML,
+    exportPipelineZip,
     deletePipeline
 } from '../Api/api';
 
@@ -59,6 +60,40 @@ export const SET_PIPELINE_SEARCH_STRING = 'SET_PIPELINE_NAME_FILTER';
    return Promise.resolve(false);
  }
  
+export const requestDownloadPipelineZip = (pipelineId) => async (dispatch, getState) => {
+
+  if (getState().auth.loggedIn) {
+    try {
+      let token = Cookies.get('token');
+      let response = await exportPipelineZip(pipelineId, token);
+                              
+      if(response.status === 200) {
+          // Try to find out the filename from the content disposition `filename` value
+          var filename = response.headers['filename'];
+
+          // The actual download
+          var blob = new Blob([response.data], { type: response.headers['content-type'] });
+          var link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          return true
+      }
+    }
+    catch (error) { 
+      dispatch(showErrorToast(`Error trying to export pipeline ID${pipelineId} to zip: ${error}`));
+    }
+  }
+  else {
+    dispatch(showErrorToast("Not logged in!"));
+  }
+ return false;
+
+}
+
  export const requestDownloadPipelineYAML = (pipelineId) => async (dispatch, getState) => {
    
    if (getState().auth.loggedIn) {
@@ -79,7 +114,7 @@ export const SET_PIPELINE_SEARCH_STRING = 'SET_PIPELINE_NAME_FILTER';
            link.click();
            document.body.removeChild(link);
  
-           return Promise.resolve(true);
+           return true
        }
      }
      catch (error) { 
@@ -89,8 +124,8 @@ export const SET_PIPELINE_SEARCH_STRING = 'SET_PIPELINE_NAME_FILTER';
    else {
      dispatch(showErrorToast("Not logged in!"));
    }
-   return Promise.resolve(false);
- }
+  return false;
+}
  
  export const removePipeline = (pipelineId) => dispatch => {
    dispatch({
@@ -100,7 +135,7 @@ export const SET_PIPELINE_SEARCH_STRING = 'SET_PIPELINE_NAME_FILTER';
    return Promise.resolve(true);
  }
  
- export const selectPipelinePage = (selectedPage) => async (dispatch) => {
+ export const changePipelinePage = (selectedPage) => async (dispatch) => {
    return dispatch({
      type: CHANGE_PIPELINE_PAGE,
      selectedPage

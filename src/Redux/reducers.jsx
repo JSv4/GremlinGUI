@@ -547,7 +547,8 @@ function pipelines(
           loading: false,
           items: _.sortBy(action.response.data.results, 'id'),
           count: action.response.data.count,
-          page_size: action.response.data.page_size
+          page_size: action.response.data.page_size,
+          pages: action.response.data.total_pages
         });
 
       case UPDATE_PIPELINE:

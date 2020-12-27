@@ -44,7 +44,7 @@ import {
 
 import { 
   setPipelineSearchString,
-  selectPipelinePage,
+  changePipelinePage,
   fetchPipelines,
   clearPipelines,
   selectPipeline,
@@ -225,7 +225,7 @@ class LawyerHome extends Component {
   // Change the page # in the redux store and then refetch pipelines (pagination is injected to url
   // request automatically)
   handlePipelinePageChange = (pageNo) => {
-    this.props.dispatch(selectPipelinePage(pageNo)).then(() => {
+    this.props.dispatch(changePipelinePage(pageNo)).then(() => {
       this.props.dispatch(fetchPipelines());
     });
   }

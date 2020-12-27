@@ -358,9 +358,9 @@ class PipelineDigraphTab extends React.PureComponent {
                 
                         <div>
                             <Pagination
-                                activePage={1}
-                                onPageChange={(e, { activePage }) => console.log("Change page to: ", activePage)} 
-                                totalPages={1}
+                                activePage={pipelines.selectedPage}
+                                onPageChange={(e, { activePage }) => this.props.handlePipelinePageChange(activePage)} 
+                                totalPages={pipelines.pages}
                             />
                         </div>  
                     </div> : <></> 

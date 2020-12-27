@@ -251,6 +251,7 @@ export class PipelineDetailPanel extends PureComponent {
                                         onDelete={this.props.handleDeleteTestDocument}
                                         onUpload={this.props.handleUploadTestDocument}
                                         onDownload={this.props.handleDownloadDocument}
+                                        handleSelectDocumentPage={this.props.handleTestDocumentPageChange}
                                     />
                                 </>
                         }

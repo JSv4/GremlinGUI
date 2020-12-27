@@ -574,107 +574,109 @@ export default class ScriptModal extends Component {
                 />
                 <Header icon='archive' content={`Edit Script: ${this.state.localScriptObj ? this.state.localScriptObj.human_name : ""}`}/>
                 <Modal.Content style={{flex:10, height:'90%'}}>
-                    <LoadingIndicator/>
-                    <Segment >
-                        <Button circular icon='save' color='green' onClick={() => this.toggleConfirmModal()}/>
-                        <Button circular icon='trash' color='red' onClick={() => this.toggleDeleteModal()}/>
-                        <Button 
-                            floated='right'
-                            toggle
-                            active={this.state.localScriptObj.mode==='DEPLOYED'}
-                            onClick={this.onToggleMode}
-                            color={this.state.localScriptObj.mode==='DEPLOYED' ? 'green' : 'red'}
-                        >
-                            {this.state.localScriptObj.mode==='DEPLOYED' ? 'In Production' : 'Testing Mode'}
-                        </Button>
-                    </Segment>
-                    <Segment style={{width:'100%', height:'90%'}}>
-                        <div style={{ display:'flex', flexDirection:'row', justifyContent:'flex-start', height:'100%', width:'100%' }}>
-                            <div style={{height:'100%'}}>
-                                <Menu icon='labeled' vertical>
-                                    <Menu.Item
-                                        name='pythoncode'
-                                        active={this.state.modalTab === 0}
-                                        onClick={() => this.setSelectedTab(0)}
-                                    >
-                                        <Icon name='code' />
-                                        Python Code
-                                    </Menu.Item>
+                    <div>
+                        <LoadingIndicator/>
+                        <Segment >
+                            <Button circular icon='save' color='green' onClick={() => this.toggleConfirmModal()}/>
+                            <Button circular icon='trash' color='red' onClick={() => this.toggleDeleteModal()}/>
+                            <Button 
+                                floated='right'
+                                toggle
+                                active={this.state.localScriptObj.mode==='DEPLOYED'}
+                                onClick={this.onToggleMode}
+                                color={this.state.localScriptObj.mode==='DEPLOYED' ? 'green' : 'red'}
+                            >
+                                {this.state.localScriptObj.mode==='DEPLOYED' ? 'In Production' : 'Testing Mode'}
+                            </Button>
+                        </Segment>
+                        <Segment style={{width:'100%', height:'90%'}}>
+                            <div style={{ display:'flex', flexDirection:'row', justifyContent:'flex-start', height:'100%', width:'100%' }}>
+                                <div style={{height:'100%'}}>
+                                    <Menu icon='labeled' vertical>
+                                        <Menu.Item
+                                            name='pythoncode'
+                                            active={this.state.modalTab === 0}
+                                            onClick={() => this.setSelectedTab(0)}
+                                        >
+                                            <Icon name='code' />
+                                            Python Code
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='scriptmeta'
-                                        active={this.state.modalTab === 1}
-                                        onClick={() => this.setSelectedTab(1)}
-                                    >
-                                        <Icon name='settings' />
-                                        Settings
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            name='scriptmeta'
+                                            active={this.state.modalTab === 1}
+                                            onClick={() => this.setSelectedTab(1)}
+                                        >
+                                            <Icon name='settings' />
+                                            Settings
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='inputschema'
-                                        active={this.state.modalTab === 2}
-                                        onClick={() => this.setSelectedTab(2)}
-                                    >
-                                        <Icon name='table' />
-                                        Input Schema
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            name='inputschema'
+                                            active={this.state.modalTab === 2}
+                                            onClick={() => this.setSelectedTab(2)}
+                                        >
+                                            <Icon name='table' />
+                                            Input Schema
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='filetypes'
-                                        active={this.state.modalTab === 3}
-                                        onClick={() => this.setSelectedTab(3)}
-                                    >
-                                        <Icon name='file alternate outline' />
-                                        Filetypes
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            name='filetypes'
+                                            active={this.state.modalTab === 3}
+                                            onClick={() => this.setSelectedTab(3)}
+                                        >
+                                            <Icon name='file alternate outline' />
+                                            Filetypes
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='installers'
-                                        active={this.state.modalTab === 4}
-                                        onClick={() => this.setSelectedTab(4)}
-                                    >
-                                        <Icon name='paper plane outline' />
-                                        Installers
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            name='installers'
+                                            active={this.state.modalTab === 4}
+                                            onClick={() => this.setSelectedTab(4)}
+                                        >
+                                            <Icon name='paper plane outline' />
+                                            Installers
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='packages'
-                                        active={this.state.modalTab === 5}
-                                        onClick={() => this.setSelectedTab(5)}
-                                    >
-                                        <Icon name='box' />
-                                        Python Packages
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            name='packages'
+                                            active={this.state.modalTab === 5}
+                                            onClick={() => this.setSelectedTab(5)}
+                                        >
+                                            <Icon name='box' />
+                                            Python Packages
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='data_file'
-                                        active={this.state.modalTab === 6}
-                                        onClick={() => this.setSelectedTab(6)}
-                                    >
-                                        <Icon name={this.state.localScriptObj.data_file ? "file archive" : "file archive outline"}/>
-                                        Data File
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            name='data_file'
+                                            active={this.state.modalTab === 6}
+                                            onClick={() => this.setSelectedTab(6)}
+                                        >
+                                            <Icon name={this.state.localScriptObj.data_file ? "file archive" : "file archive outline"}/>
+                                            Data File
+                                        </Menu.Item>
 
-                                    <Menu.Item
-                                        name='status'
-                                        active={this.state.modalTab === 7}
-                                        onClick={() => this.setSelectedTab(7)}
-                                    >
-                                        <Icon name={this.state.localScriptObj.install_error ? 
-                                            "warning sign" : "thumbs up outline"}
-                                            color={this.state.localScriptObj.install_error ? 
-                                            "red" : "green"}/>
-                                        Status
-                                    </Menu.Item>
-                                </Menu>
-                            </div>
-                            <div style={{flexGrow:10}}>
-                                <Segment style={{width: '100%', height:'100%'}}>
-                                    {panes[this.state.modalTab]}
-                                </Segment>
-                            </div>
-                        </div> 
-                    </Segment>
+                                        <Menu.Item
+                                            name='status'
+                                            active={this.state.modalTab === 7}
+                                            onClick={() => this.setSelectedTab(7)}
+                                        >
+                                            <Icon name={this.state.localScriptObj.install_error ? 
+                                                "warning sign" : "thumbs up outline"}
+                                                color={this.state.localScriptObj.install_error ? 
+                                                "red" : "green"}/>
+                                            Status
+                                        </Menu.Item>
+                                    </Menu>
+                                </div>
+                                <div style={{flexGrow:10}}>
+                                    <Segment style={{width: '100%', height:'100%'}}>
+                                        {panes[this.state.modalTab]}
+                                    </Segment>
+                                </div>
+                            </div> 
+                        </Segment>
+                    </div>
                 </Modal.Content>
             </Modal>          
         );
