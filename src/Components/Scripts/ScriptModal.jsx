@@ -575,7 +575,6 @@ export default class ScriptModal extends Component {
                 <Header icon='archive' content={`Edit Script: ${this.state.localScriptObj ? this.state.localScriptObj.human_name : ""}`}/>
                 <Modal.Content style={{flex:10, height:'90%'}}>
                     <div>
-                        <LoadingIndicator/>
                         <Segment >
                             <Button circular icon='save' color='green' onClick={() => this.toggleConfirmModal()}/>
                             <Button circular icon='trash' color='red' onClick={() => this.toggleDeleteModal()}/>
@@ -590,6 +589,7 @@ export default class ScriptModal extends Component {
                             </Button>
                         </Segment>
                         <Segment style={{width:'100%', height:'90%'}}>
+                            <LoadingIndicator/>
                             <div style={{ display:'flex', flexDirection:'row', justifyContent:'flex-start', height:'100%', width:'100%' }}>
                                 <div style={{height:'100%'}}>
                                     <Menu icon='labeled' vertical>

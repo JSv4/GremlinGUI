@@ -252,7 +252,7 @@ class PipelineDigraphTab extends React.PureComponent {
                 <ConfirmModal
                     visible={this.state.showDeleteConfirm} 
                     message="You have chosen to delete this pipeline. ARE YOU SURE? This cannot be undone. You will lose all pipeline relationships and settings."
-                    yesAction={() => this.onConfirmDelete(this.props.jobs.selectedJobId)}
+                    yesAction={() => this.props.handleDeletePipeline(this.props.pipelines.selectedPipelineId)}
                     noAction={this.toggleDeleteConfirm}
                     toggleModal={this.toggleDeleteConfirm}
                 />

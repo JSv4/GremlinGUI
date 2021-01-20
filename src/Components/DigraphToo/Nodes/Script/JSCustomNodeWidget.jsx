@@ -41,6 +41,11 @@ class JSCustomNodeWidget extends React.Component {
 			test_job 
 		} = this.props;
 		const { buildMode } = application;
+		
+		// If there is no node object... return nothing
+		if (!node) {
+			return <></>
+		}
 
 		const myNode = _.find(pipelinesteps.items, {id: node.id});
 		const myResult = _.find(results.items, {pipeline_node: node.id, type:"STEP"});
