@@ -147,6 +147,7 @@ export class PipelineDetailPanel extends PureComponent {
                                         pipeline={selectedPipeline}
                                         jobLogsLoading={testJobLogsLoading}
                                         handleUpdateJob={this.props.handleUpdateTestJob}
+                                        completion_percent={this.props.completion_percent}
                                     />
                                 </Grid.Column>
                             </Grid.Row> 

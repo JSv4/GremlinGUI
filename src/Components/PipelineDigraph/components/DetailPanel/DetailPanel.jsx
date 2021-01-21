@@ -36,6 +36,16 @@ export class DetailPanel extends React.PureComponent {
             results 
         } = this.props;
 
+        let completion_percent = 0;
+
+        if (selectedPipeline && results) {
+            if (selectedPipeline.nodes && results.items) {
+                if (selectedPipeline.nodes.length > 0) {
+                    completion_percent = results.items.filter(item => item.type==="STEP" && item.finished).length / selectedPipeline.nodes.length;
+                }
+            }
+        }
+
         if (!selectedNode) {
             return (
                 <PipelineDetailPanel
@@ -43,6 +53,7 @@ export class DetailPanel extends React.PureComponent {
                     pipelines={pipelines}
                     buildMode={buildMode}
                     test_job={test_job}
+                    completion_percent={completion_percent}
                     selectedNode={selectedNode}
                     selectedPipeline={selectedPipeline}
                     testJobResult={testJobResult}

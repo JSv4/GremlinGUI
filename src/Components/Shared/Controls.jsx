@@ -114,10 +114,19 @@ export const JobControl = (props) => {
         job,
         pipeline,
         handleUpdateJob, 
+        completion_percent
     } = props;
 
     if (!job) {
         return <></>;
+    }
+
+    let completion = 0;
+
+    if (completion_percent) {
+        completion = (100 * completion_percent).toFixed(2)
+    } else {
+        completion = (100 * job.completed_tasks/job.task_count).toFixed(2);
     }
 
     return ( 
@@ -140,7 +149,7 @@ export const JobControl = (props) => {
                             <Header textAlign='center' as='h5'>Progress:</Header>
                             <Circle 
                                 style={{textAlign:"center"}}
-                                progress={(100 * job.completed_tasks/job.task_count).toFixed(2)}
+                                progress={completion}
                             />
                         </div>
                     ) : (
@@ -193,7 +202,8 @@ export const JobStatusCol = (props) => {
         job,
         pipeline,
         handleUpdateJob, 
-        style
+        style,
+        completion_percent
     } = props;
 
     return ( 
@@ -203,6 +213,7 @@ export const JobStatusCol = (props) => {
                     job={job}
                     pipeline={pipeline}
                     handleUpdateJob={handleUpdateJob}
+                    completion_percent={completion_percent}
                 />
                 :
                 <SidebarLoadingPlaceholder LoadingText='Creating Test Job...'/>
