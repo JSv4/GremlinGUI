@@ -43,6 +43,17 @@ export const JobStatusStep = (props) => {
     
     const {results, selectedJob, pipelines, handleUpdateJob, handleDownloadResult} = props;
 
+    let selectedPipeline = _.find(pipelines.items, {id: pipelines.selectedPipelineId})
+
+    let completion_percent = 0;
+    if (selectedPipeline && results) {
+        if (selectedPipeline.nodes && results.items) {
+            if (selectedPipeline.nodes.length > 0) {
+                completion_percent = results.items.filter(item => item.type==="STEP" && item.finished).length / selectedPipeline.nodes.length;
+            }
+        }
+    }
+
     return (
         <Segment placeholder style={{width:'100%', height:'100%', backgroundColor:'#f3f4f5'}}>
             <Grid columns={2} stackable textAlign='center'>
@@ -51,8 +62,9 @@ export const JobStatusStep = (props) => {
                     <Grid.Column>
                         <JobControl
                             job={selectedJob}
-                            pipeline={pipelines.selectedPipeline}
+                            pipeline={selectedPipeline}
                             handleUpdateJob={handleUpdateJob}
+                            completion_percent={completion_percent}
                         />
                     </Grid.Column>
                     <Grid.Column>

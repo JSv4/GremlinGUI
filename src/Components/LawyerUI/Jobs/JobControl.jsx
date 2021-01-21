@@ -2,16 +2,25 @@ import React from 'react';
 import { Grid, Header, Icon, Label, Message } from 'semantic-ui-react';
 import Circle from 'react-circle';
 
+// TODO - duplicate of component in Controls.jsx
 export function JobControl(props) {
 
     const {
         job,
         pipeline,
         handleUpdateJob, 
+        completion_percent
     } = props;
 
     if (!job) {
         return <></>;
+    }
+
+    let completion = 0;
+    if (completion_percent>0) {
+        completion = (100 * completion_percent).toFixed(2);
+    } else {
+        completion = (100 * job.completed_tasks/job.task_count).toFixed(2);
     }
 
     return ( 
@@ -34,7 +43,7 @@ export function JobControl(props) {
                             <Header textAlign='center' as='h5'>Progress:</Header>
                             <Circle 
                                 style={{textAlign:"center"}}
-                                progress={(100 * job.completed_tasks/job.task_count).toFixed(2)}
+                                progress={completion}
                             />
                         </div>
                     ) : (

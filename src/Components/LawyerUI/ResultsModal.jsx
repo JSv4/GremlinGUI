@@ -11,6 +11,7 @@ import {
     Message
 } from 'semantic-ui-react';
 import Circle from 'react-circle';
+import _ from 'lodash';
 import { CenteredIconDiv } from '../Layouts/Layouts';
 
 export const JobResult = (props) => {
@@ -43,11 +44,26 @@ export const JobResult = (props) => {
 
 export const ResultsModal = (props) => {
 
-    const { visible, toggleModal, handleUpdateJob, selectedJob } = props;
+    const { pipelines, results, visible, toggleModal, handleUpdateJob, selectedJob } = props;
 
     if (!selectedJob) {
         return <></>;
     }
+
+    let selectedPipeline = null;
+    if (selectedJob && selectedJob.pipeline) {
+        selectedPipeline = _.find(pipelines.items, {id: selectedJob.pipeline.id});  
+    }
+
+    let completion_percent = 0;
+    if (selectedPipeline && results) {
+        if (selectedPipeline.nodes && results.items) {
+            if (selectedPipeline.nodes.length > 0) {
+                completion_percent = results.items.filter(item => item.type==="STEP" && item.finished).length / selectedPipeline.nodes.length;
+            }
+        }
+    }
+    completion_percent = (100 * completion_percent).toFixed(2);
 
     return (  
         <Modal
@@ -92,7 +108,7 @@ export const ResultsModal = (props) => {
                                                         <div>
                                                             <Circle 
                                                                 style={{textAlign:"center"}}
-                                                                progress={(100 * selectedJob.completed_tasks/selectedJob.task_count).toFixed(2)}
+                                                                progress={completion_percent}
                                                             />
                                                         </div> 
                                                     }

@@ -43,6 +43,13 @@ export default class JobSettings extends PureComponent {
 
     packageSettings = (newJobInputs) => {
         let updatedObj = {...this.props.job};
+        
+        // Need a more elegant solution here... but the serializer is not expecting pipeline obj yet it's included
+        // in redux store for some requests. I know, I know, bad coding. Need to use this consistently in the future.
+        if ('pipeline' in updatedObj) {
+            delete updatedObj.pipeline;
+        }
+        
         updatedObj.job_inputs=JSON.stringify(newJobInputs);
         return updatedObj;
     }

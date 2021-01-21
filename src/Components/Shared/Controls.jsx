@@ -122,9 +122,8 @@ export const JobControl = (props) => {
     }
 
     let completion = 0;
-
-    if (completion_percent) {
-        completion = (100 * completion_percent).toFixed(2)
+    if (completion_percent>0) {
+        completion = (100 * completion_percent).toFixed(2);
     } else {
         completion = (100 * job.completed_tasks/job.task_count).toFixed(2);
     }

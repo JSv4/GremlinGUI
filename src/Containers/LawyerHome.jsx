@@ -46,6 +46,7 @@ import {
   setPipelineSearchString,
   changePipelinePage,
   fetchPipelines,
+  loadFullPipeline,
   clearPipelines,
   selectPipeline,
   unselectPipeline, 
@@ -79,8 +80,6 @@ class LawyerHome extends Component {
 
   tick = () => {
 
-    console.log("Tick");
-
     //On the document step, refresh docs to show updates to extract.
     if(this.state.step === 2) {
       this.handleRefreshDocuments();
@@ -94,9 +93,25 @@ class LawyerHome extends Component {
   }
 
   toggleResultModal = () => {
-    this.setState({
-      showResultModal: !this.state.showResultModal
-    });
+    if (!this.state.showResultModal) {
+      if (this.props.jobs.selectedJobId) {
+        let selectedJob = _.find(this.props.jobs.items, {id: this.props.jobs.selectedJobId});
+        if (selectedJob && selectedJob.pipeline && selectedJob.pipeline.id) {
+          this.props.dispatch(loadFullPipeline(selectedJob.pipeline.id)).then(() => {
+            this.props.dispatch(fetchSummaryResultsForJob(this.props.jobs.selectedJobId)).then(() => {
+              this.setState({
+                showResultModal: !this.state.showResultModal
+              });
+            })
+          });
+        }
+      } 
+    }
+    else {
+      this.setState({
+        showResultModal: !this.state.showResultModal
+      });
+    }
   }
 
   handleRefreshSelectedJob = () => {
@@ -169,7 +184,9 @@ class LawyerHome extends Component {
   handleCreateJob = (jobObj) => {
     this.props.dispatch(createJob(jobObj)).then((response) => {
       this.props.dispatch(selectJob(response.id)).then(() => {
-        this.setStep(2);
+        this.props.dispatch(loadFullPipeline(this.props.pipelines.selectedPipelineId)).then(() => {
+          this.setStep(2);
+        });
       });
     });
   }
@@ -217,7 +234,6 @@ class LawyerHome extends Component {
 
   handleSelectJob = (jobId) => {
     this.props.dispatch(selectJob(jobId)).then(() => {
-      console.log("Toggle modal!");
       this.toggleResultModal();
     });
   }
@@ -366,6 +382,8 @@ class LawyerHome extends Component {
     return (
         <div style={{height:'100%', width:'100%'}}>
           <ResultsModal 
+            pipelines={pipelines}
+            results={results}
             jobs={jobs}
             selectedJob={selectedJob}
             visible={this.state.showResultModal}
