@@ -443,7 +443,7 @@ class LawyerHome extends Component {
             right: '2vw'
 
           }}>
-              <Image style={{height:'8vh'}} src='/gordium_128_name_left.png'/>
+              <Image style={{height:'8vh'}} src='/os_legal_128_name_left.png'/>
           </div>
         </div>
     );

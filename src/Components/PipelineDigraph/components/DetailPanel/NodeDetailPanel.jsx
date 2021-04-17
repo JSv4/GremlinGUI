@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { 
-    Form,
-    Label,
     Button,
     Grid,
     Segment, 
     Divider,
-    Header,
     Popup,
     Dimmer,
     Loader

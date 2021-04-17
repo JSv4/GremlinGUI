@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { 
-    Tab,
     Segment,
+    Statistic,
     Grid,
     Dimmer, 
     Loader,
@@ -11,7 +11,7 @@ import {
     Header,
     Divider,
     Popup, 
-    Accordion
+    Accordion,
 } from 'semantic-ui-react';
 import _ from 'lodash';
 
@@ -20,6 +20,7 @@ import JobSettings from '../../../Shared/JobSettings';
 import { JobDocumentReadOnlyTab } from '../../../Shared/SidebarTabs';
 import PipelineMetaModel from '../Modals/PipelineMetaModal';
 import JsonViewer from '../../../Shared/JsonViewer';
+import EditInputModal from './EditInputModal';
 import { DocumentList } from '../../../Documents/DocumentList';
 import { JobStatusCol } from '../../../Shared/Controls';
 import { PipelinePanelHeader } from '../../../Shared/DetailsWidgets';
@@ -51,8 +52,13 @@ export class PipelineDetailPanel extends PureComponent {
         this.state={
             showDeleteConfirm: false,
             showMetaModal: false,
-            showInputs: false
+            showInputs: false,
+            showFormEditor: false
         };
+    }
+
+    setShowFormEditor = (show) => {
+        this.setState({showFormEditor: show});
     }
 
     render() {
@@ -199,11 +205,25 @@ export class PipelineDetailPanel extends PureComponent {
                         </Grid.Row>
                     </Grid>
                 </>),
-                (<JsonViewer 
-                    collapsed={false}
-                    jsonObj={pipelineSchema}
-                    title='Pipeline Schema:'
-                />)
+                (<div style={{
+                    marginTop:'2rem',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center'
+                }}>
+                    <Segment onClick={() => this.setShowFormEditor(!this.state.showFormEditor)}>
+                        <Statistic >
+                                <Statistic.Value>
+                                {_.isEmpty(selectedPipeline.json_schema) ? 
+                                    <><Icon color='green' name='edit outline'/> Yes</> 
+                                    : 
+                                    <><Icon color='red' name='edit outline'/> No</>
+                                }
+                                </Statistic.Value>
+                            <Statistic.Label>Input Required</Statistic.Label>
+                        </Statistic>
+                    </Segment>
+                </div>)
             ];
 
             if (this.props.buildMode) {
@@ -290,6 +310,11 @@ export class PipelineDetailPanel extends PureComponent {
                     <PipelinePanelHeader selectedPipeline={selectedPipeline}/>
                     {tabs[sidebarTab]}
                 </div>
+                <EditInputModal
+                    open={this.state.showFormEditor}
+                    setOpen={this.setShowFormEditor}
+                    saveSchema={(data)=>console.log(data)}
+                />
             </Segment>
         );
     }

@@ -4,20 +4,57 @@ import { PortWidget } from '@projectstorm/react-diagrams';
 import { 
 	Icon,
 	Card,
+	Header,
 	Dimmer,
 	Loader,
 	Image,
 	Button,
-	Label
+	Segment,
+	// Popup,
+	// Menu
 } from 'semantic-ui-react';
 import _ from 'lodash';
 
 import { runTestJobToNode } from '../../../../Redux/actions';
 import { StepStatusRibbons } from '../../../Shared/StatusLabels';
 
+import start_node_image from '../../../../assets/start_job.png';
+
+function createContextFromEvent(e) {
+	const left = e.clientX
+	const top = e.clientY
+	const right = left + 1
+	const bottom = top + 1
+  
+	return {
+	  getBoundingClientRect: () => ({
+		left,
+		top,
+		right,
+		bottom,
+  
+		height: 0,
+		width: 0,
+	  }),
+	}
+  }
 
 class JSCustomNodeWidget extends React.Component {
 		
+	// FUTURE - Context Menus for Nodes
+	// constructor(props) {
+	// 	super(props);
+	// 	this.nodeRef = React.createRef();  
+	// 	this.state = {
+	// 		show_context_menu: false
+	// 	};
+	// }
+
+	// FUTURE - Context Menus for Nodes
+	// toggleContextMenu = () => {
+	// 	this.setState({show_context_menu: !this.state.show_context_menu});
+	// }
+
 	handleRunTestJobToNode = (nodeId) => {
         this.props.dispatch(runTestJobToNode(nodeId));
     }
@@ -86,7 +123,15 @@ class JSCustomNodeWidget extends React.Component {
 							</div>
 						</div>
 					</div>
-					<Card style={cardStyle}>
+					<Card
+						style={cardStyle} 
+						// ref={this.nodeRef}
+						// onContextMenu={(e) => {
+						// 	e.preventDefault();
+						// 	this.nodeRef.current = createContextFromEvent(e);
+						// 	this.toggleContextMenu();
+						//   }}
+					>
 						<Card.Content>
 							{ loaderObj }
 							{ myScript ? 
@@ -110,6 +155,22 @@ class JSCustomNodeWidget extends React.Component {
 							</div>
 						</div>
 					</div>
+					{/* <Popup
+						basic
+						context={this.nodeRef}
+						onClose={() => this.toggleContextMenu()}
+						open={this.state.show_context_menu}
+					>
+						<Menu
+						items={[
+							{ key: 'delete', content: 'Delete', icon: 'trash' },
+							{ key: 'edit', content: 'Edit Node', icon: 'code' },
+						]}
+						onItemClick={() => this.toggleContextMenu()}
+						secondary
+						vertical
+						/>
+					</Popup> */}
 				</div>
 			);
 		}  else {
@@ -121,25 +182,24 @@ class JSCustomNodeWidget extends React.Component {
 					<div style={{position:'absolute', zIndex:100, top:'-15px', width:'100%' }}>
 						<div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
 							<div>
-								<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')}>
-									<Icon circular inverted color='blue' name='arrow down'/>
-								</PortWidget>
+								<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')}/>
 							</div>
 						</div>
 					</div>
-					<Card style={cardStyle}>
-						<Card.Content>
-							{ loaderObj }
-							<Image
-								floated='right'
-								size='mini'
-								src='start_job.png'
-							/>
-							<Card.Header>START SCRIPT: Extracter</Card.Header>
-							<Card.Meta>Script: { myScript ? myScript.human_name : "N/A"}</Card.Meta>
-							<Card.Description><StepStatusRibbons step={myResult}/></Card.Description>
-						</Card.Content>
-					</Card>
+					<Segment 
+						circular
+						// ref={this.nodeRef}
+						// onContextMenu={(e) => {
+						// 	e.preventDefault();
+						// 	this.nodeRef.current = createContextFromEvent(e);
+						// 	this.toggleContextMenu();
+						//   }}
+					>
+						{ loaderObj }
+						<Header as='h2'>
+							<Image circular src={start_node_image}/> START
+						</Header>
+					</Segment>
 					<div style={{position:'absolute', zIndex:100, bottom:'-15px', width:'100%' }}>
 						<div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
 							<div>
@@ -149,6 +209,21 @@ class JSCustomNodeWidget extends React.Component {
 							</div>
 						</div>
 					</div>
+					{/* <Popup
+						basic
+						context={this.nodeRef}
+						onClose={() => this.toggleContextMenu()}
+						open={this.state.show_context_menu}
+					>
+						<Menu
+						items={[
+							{ key: 'convert', content: 'Convert to Input Form', icon: 'edit' },
+						]}
+						onItemClick={() => this.toggleContextMenu()}
+						secondary
+						vertical
+						/>
+					</Popup> */}
 				</div>
 			);
 		}

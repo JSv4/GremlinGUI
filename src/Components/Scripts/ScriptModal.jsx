@@ -352,7 +352,7 @@ export default class ScriptModal extends Component {
                     }}/>
             </>),
             (<>
-                <Segment>
+                <Segment style={{margin: '1rem'}}>
                     <Label attached='top'>Name and Type</Label>
                     <Input
                         style={{width:'100%'}}
@@ -371,7 +371,7 @@ export default class ScriptModal extends Component {
                         value={this.state.localScriptObj.type}
                     />
                 </Segment>
-                <Segment>
+                <Segment style={{margin: '1rem'}}>
                     <Label attached='top'>Description</Label>
                         <TextArea
                             style={{width:'100%'}}
@@ -430,13 +430,13 @@ export default class ScriptModal extends Component {
             />),
             (<InputResultTabs
                 panelOne={<>
-                    <Label attached='top'>Setup Script</Label>
+                    <Label attached='top'>Install Bash Script</Label>
                     <Form>
                         <TextArea
                             rows={12}
                             value={this.state.localScriptObj ? this.state.localScriptObj.setup_script : ""}
                             onChange={(e) => this.onSetupScriptChange(e.target.value)}
-                            style={{height:'40vh'}}/>
+                            style={{height:'40vh', marginTop:'3rem !important'}}/>
                     </Form> 
                 </>}
                 panelOneLabel="Installer Script"
@@ -511,7 +511,7 @@ export default class ScriptModal extends Component {
                 <Segment style={{marginBottom:'1vh'}}>
                     <Label attached='top'>Script Status</Label> 
                 </Segment>
-                <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100%'}}>
+                <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
                     <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent:'center', width:'100%'}}>
                         {this.state.localScriptObj.install_error ?
                             <Segment raised style={{width:'100%'}}>
@@ -524,9 +524,9 @@ export default class ScriptModal extends Component {
                                     follow
                                     caseInsensitive />
                             </Segment> :
-                                <Segment style={{width: '30vw', height:'30vh', margin:'1vh'}} raised>
+                                <Segment style={{width: '30vw', height:'30vh', margin:'2vh'}} raised>
                                 <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                                    <div style={{marginBottom:'1vh'}}>
+                                    <div style={{marginBottom:'2vh'}}>
                                         <Icon name='thumbs up outline'color='green' size='massive'/>
                                     </div>
                                     <div>
@@ -591,7 +591,7 @@ export default class ScriptModal extends Component {
                         <Segment style={{width:'100%', height:'90%'}}>
                             <LoadingIndicator/>
                             <div style={{ display:'flex', flexDirection:'row', justifyContent:'flex-start', height:'100%', width:'100%' }}>
-                                <div style={{height:'100%'}}>
+                                <div style={{height:'100%', marginRight: '1rem'}}>
                                     <Menu icon='labeled' vertical>
                                         <Menu.Item
                                             name='pythoncode'
@@ -670,7 +670,7 @@ export default class ScriptModal extends Component {
                                     </Menu>
                                 </div>
                                 <div style={{flexGrow:10}}>
-                                    <Segment style={{width: '100%', height:'100%'}}>
+                                    <Segment style={{width: '100%', height:'100%', margin:'0'}}>
                                         {panes[this.state.modalTab]}
                                     </Segment>
                                 </div>

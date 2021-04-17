@@ -1,5 +1,7 @@
 import React from 'react'
-import { Menu, Icon } from 'semantic-ui-react'
+import { Menu, Icon, Image } from 'semantic-ui-react'
+
+import form_icon from '../../../../assets/form_icon_100.png';
 
 export const PipelineTrayControls = (props) => {
     const { 
@@ -124,9 +126,32 @@ export const PipelineControls = (props) => {
                 e.stopPropagation();
                 selectTab(1);
             }}
+            style={{
+                display: 'flex',
+                flexDirection:'row',
+                justifyContent: 'center'
+            }}
         >
-            <Icon name='table' />
-            Input Schema
+            <div  style={{
+                display: 'flex',
+                flexDirection:'column',
+                justifyContent: 'center'
+            }}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection:'row',
+                    justifyContent: 'center'
+                }}>
+                    <div>
+                        <Image size='mini' src={form_icon}/>
+                    </div>
+                </div>
+                <div>
+                    <p>
+                        User Input
+                    </p>
+                </div>
+            </div>
         </Menu.Item>)
     ];
 

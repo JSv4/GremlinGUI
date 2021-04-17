@@ -1133,7 +1133,7 @@ class AsyncApp extends Component {
               justifyContent:'center',
               alignItems:'center'
             }}>
-                <Image style={{width:'4vw'}} src='/gordium_128_name_left.png'/>
+                <Image style={{width:'4vw'}} src='/os_legal_128_name_left.png'/>
             </div>
           </Sidebar>
           <Sidebar.Pusher 

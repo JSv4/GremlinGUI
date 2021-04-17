@@ -55,7 +55,7 @@ export const InputResultTabs = (props) => {
       ];
 
     return (
-        <Segment>
+        <Segment style={{padding:'0'}}>
             <Tab menu={{ pointing: true }} panes={panes} />
         </Segment>);
 }

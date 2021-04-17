@@ -14,7 +14,6 @@ import { PipelineTable } from './components/Controls/PipelineTable';
 import PipelineRow from './components/Controls/PipelineRow';
 import { PrimaryPipelineControls } from './components/Controls/PrimaryPipelineControls';
 import { PipelineTrayControls } from './components/Controls/PipelineTrayControls';
-import PipelineNode from './components/Nodes/PipelineNode';
 import { Digraph } from '../Digraph/Digraph';
 import { VerticallyCenteredDiv } from '../Shared/Wrappers';
 import ConfirmModal from '../Shared/ConfirmModal';
@@ -344,7 +343,6 @@ class PipelineDigraphTab extends React.PureComponent {
                         // headerWidget={
                         //     <PipelineHeaderWidget selectedPipeline={selectedPipeline}/>
                         // }
-                        nodeClass={PipelineNode}
                     />
                  }
                  { !selectedPipeline ? 

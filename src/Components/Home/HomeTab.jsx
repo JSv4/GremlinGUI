@@ -171,7 +171,7 @@ export default class AdminHomeTab extends PureComponent {
                     right: '1vw'
 
                 }}>
-                <Image style={{height:'6vh'}} src='/gordium_128_name_left.png'/>
+                <Image style={{height:'6vh'}} src='/os_legal_128_name_left.png'/>
             </div>
         </div>);
     }

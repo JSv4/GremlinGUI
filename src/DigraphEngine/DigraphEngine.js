@@ -60,7 +60,7 @@ export default class DigraphEngine {
 
   renderPipeline = (selectedPipelineObj) => {
     
-    // Blow out whatever model is displayed / rendered
+    // Blow up whatever model is displayed / rendered
     this.clearAllValues();
 
     let nodes = [];
