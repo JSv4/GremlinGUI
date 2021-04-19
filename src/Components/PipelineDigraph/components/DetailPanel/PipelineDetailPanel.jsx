@@ -42,6 +42,20 @@ export class PipelineDetailPanel extends PureComponent {
         }   
     }
 
+    onPipelineInputSchemaChange = (input_json_schema) => {
+        let { selectedPipelineId } = this.props.pipelines;
+
+        if (selectedPipelineId !== -1) {
+
+            let updatedPipeline = {
+                id: selectedPipelineId,
+                input_json_schema
+            };
+
+            this.props.handleUpdatePipeline({...updatedPipeline, });
+        }
+    }
+
     onProductionStatusChange = (status) => {
         let oldPipelineObj = _.find(this.props.pipelines.items, { 'id': this.props.pipelines.selectedPipelineId })
         this.props.handleUpdatePipeline({...oldPipelineObj, production:status});
@@ -313,7 +327,7 @@ export class PipelineDetailPanel extends PureComponent {
                 <EditInputModal
                     open={this.state.showFormEditor}
                     setOpen={this.setShowFormEditor}
-                    saveSchema={(data)=>console.log(data)}
+                    saveSchema={(data)=>this.onPipelineInputSchemaChange(data)}
                 />
             </Segment>
         );

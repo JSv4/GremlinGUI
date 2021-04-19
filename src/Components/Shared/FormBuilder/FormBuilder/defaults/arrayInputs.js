@@ -2,9 +2,6 @@
 
 import React from 'react';
 import { 
-  Input,
-  Popup,
-  Checkbox,
   Form 
 } from 'semantic-ui-react';
 import {

@@ -8,8 +8,6 @@ import Section from './Section';
 import Add from './Add';
 import { arrows as arrowsStyle } from './styles';
 import {
-  parse,
-  stringify,
   checkForUnsupportedFeatures,
   generateElementComponentsFromSchemas,
   addCardObj,
@@ -242,10 +240,10 @@ export default function FormBuilder({
   mods,
   className,
 }) {
-  const schemaData = (parse(schema)) || {};
+  const schemaData = schema? schema : {};
   const classes = useStyles();
   schemaData.type = 'object';
-  const uiSchemaData = (parse(uischema)) || {};
+  const uiSchemaData = uischema ? uischema : {};
   const allFormInputs = {
     ...DEFAULT_FORM_INPUTS,
     ...(mods && mods.customFormInputs),
@@ -316,10 +314,10 @@ export default function FormBuilder({
               placeholder='Title'
               onChange={(ev) => {
                 onChange(
-                  stringify({
+                  {
                     ...schemaData,
                     title: ev.target.value,
-                  }),
+                  },
                   uischema,
                 );
               }}
@@ -336,10 +334,10 @@ export default function FormBuilder({
               value={schemaData.description || ''}
               onChange={(ev) =>
                 onChange(
-                  stringify({
+                  {
                     ...schemaData,
                     description: ev.target.value,
-                  }),
+                  },
                   uischema,
                 )
               }
@@ -359,7 +357,7 @@ export default function FormBuilder({
                 schema: schemaData,
                 uischema: uiSchemaData,
                 onChange: (newSchema, newUiSchema) =>
-                  onChange(stringify(newSchema), stringify(newUiSchema)),
+                  onChange(newSchema, newUiSchema),
                 definitionData: schemaData.definitions,
                 definitionUi: uiSchemaData.definitions,
                 categoryHash,
@@ -377,7 +375,7 @@ export default function FormBuilder({
                     schemaData,
                     uiSchemaData,
                     onChange: (newSchema, newUiSchema) =>
-                      onChange(stringify(newSchema), stringify(newUiSchema)),
+                      onChange(newSchema, newUiSchema),
                     definitionData: schemaData.definitions,
                     definitionUi: uiSchemaData.definitions,
                     path: 'root',
@@ -428,7 +426,7 @@ export default function FormBuilder({
                   schema: schemaData,
                   uischema: uiSchemaData,
                   onChange: (newSchema, newUiSchema) =>
-                    onChange(stringify(newSchema), stringify(newUiSchema)),
+                    onChange(newSchema, newUiSchema),
                   definitionData: schemaData.definitions,
                   definitionUi: uiSchemaData.definitions,
                   categoryHash,
@@ -438,7 +436,7 @@ export default function FormBuilder({
                   schema: schemaData,
                   uischema: uiSchemaData,
                   onChange: (newSchema, newUiSchema) =>
-                    onChange(stringify(newSchema), stringify(newUiSchema)),
+                    onChange(newSchema, newUiSchema),
                   definitionData: schemaData.definitions,
                   definitionUi: uiSchemaData.definitions,
                   categoryHash,

@@ -14,22 +14,7 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import Form from '@rjsf/semantic-ui';
 
 import FormBuilder from './FormBuilder/FormBuilder';
-import PredefinedGallery from './FormBuilder/PredefinedGallery';
 import ErrorBoundary from './ErrorBoundary';
-
-// return error message for parsing or blank if no error
-function checkError(text, language) {
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch (e) {
-    return e.toString();
-  }
-  if (typeof data === 'string') {
-    return 'Received a string instead of object.';
-  }
-  return '';
-}
 
 class JsonSchemaFormEditor extends React.Component {
   constructor(props) {
@@ -76,8 +61,8 @@ class JsonSchemaFormEditor extends React.Component {
 
   render() {
 
-    const schemaError = checkError(this.props.schema, this.props.lang);
-    const schemaUiError = checkError(this.props.uischema, this.props.lang);
+    const schemaError = '';
+    const schemaUiError = '';
 
     const panes = [
       {
@@ -240,26 +225,6 @@ class JsonSchemaFormEditor extends React.Component {
                         </div>
                       </div>
       },
-      {
-        menuItem: 'Pre-Configured Components',
-        render: () => <div
-                        className='tab-pane'
-                        style={{
-                          height: this.props.height ? this.props.height : '500px',
-                        }}
-                      >
-                        <ErrorBoundary onErr={() => {}}>
-                          <PredefinedGallery
-                            schema={this.props.schema}
-                            uischema={this.props.uischema}
-                            onChange={(newSchema, newUiSchema) => {
-                              if (this.props.onChange)
-                                this.props.onChange(newSchema, newUiSchema);
-                            }}
-                          />
-                        </ErrorBoundary>
-                      </div>
-      }
     ]
 
     return (
