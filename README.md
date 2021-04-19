@@ -77,4 +77,6 @@ on how this setup works are here: https://www.folio3.com/using-less-in-react-wit
   - Redux-Thunk
 
 - Other Acknowledgements
-  - Special thanks to the *[logossim](https://github.com/renato-bohler/logossim)* project for the design inspirations in how use react-diagrams to power the pipeline edtiro.
+  - Special thanks to the *[logossim](https://github.com/renato-bohler/logossim)* project for the design inspirations in how use react-diagrams to power the pipeline editor.
+  - The form builder is based on *[react-json-schema-form-builder](https://github.com/ginkgobioworks/react-json-schema-form-builder)*. The GUI has been recoded for Semantic-UI with some structural changes
+  to support Sematic's default css styling. 
