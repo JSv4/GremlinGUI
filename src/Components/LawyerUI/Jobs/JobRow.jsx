@@ -47,7 +47,7 @@ export const JobRow = (props) => {
                 basic
                 circular
                 color='grey'
-                onClick={()=>{props.handleDownloadJob(props.job.id)}}
+                onClick={()=>props.handleDownloadJob(props.job.id)}
             />);
     }
     if (!props.job.queued && !props.job.started && !props.job.error && !props.job.finished) {

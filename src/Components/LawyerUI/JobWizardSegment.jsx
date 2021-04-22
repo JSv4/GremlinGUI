@@ -5,6 +5,7 @@ import {
     Segment,
     Button
 } from 'semantic-ui-react';
+import { InputFormStep } from './InputFormStep';
 import { JobStatusStep } from '../LawyerUI/JobStatusStep';
 import { JobDetailsStep } from './JobDetailsStep';
 import { PipelineView } from '../Pipelines/PipelineView';
@@ -12,133 +13,7 @@ import { DocumentSelectionStep } from './DocumentSelectionStep';
 import { VerticallyCenteredDiv, HorizontallyCenteredDiv } from '../Shared/Wrappers';
 
 import _ from 'lodash';
-
-export const totalSteps = 4;
  
-function NavButtons(props) {
-    
-    const { step } = props;
-
-    let prevButton = <></>;
-    let nextButton = <></>;
-
-    if (step === 0) {
-        
-        prevButton = (
-            <Button
-                primary
-                icon
-                labelPosition='left'
-                onClick={props.reverseStep}
-                style={{width:'10vw'}}
-            >
-                Home
-                <Icon name='home' />
-            </Button>
-        );
-
-        nextButton = (
-            <Button
-                icon
-                positive
-                labelPosition='right'
-                onClick={props.advanceStep}
-                style={{width:'10vw'}}
-            >
-                Next
-                <Icon name='right arrow' />
-            </Button>
-        );
-    } 
-    if (step === 1) {
-        
-        prevButton = 
-        (<Button
-            icon
-            labelPosition='left'
-            onClick={props.reverseStep}
-            style={{width:'10vw'}}
-        >
-            Back
-            <Icon name='left arrow' />
-        </Button>);
-
-        nextButton = (
-            <Button
-                icon
-                positive
-                labelPosition='right'
-                onClick={props.advanceStep}
-                style={{width:'10vw'}}
-            >
-                Next
-                <Icon name='right arrow' />
-            </Button>
-        );
-    }
-    if (step === 2) {
-        
-        prevButton = 
-        (<Button
-            disabled
-            icon
-            labelPosition='left'
-            onClick={props.reverseStep}
-            style={{width:'10vw'}}
-        >
-            Back
-            <Icon name='left arrow' />
-        </Button>);
-
-        nextButton = (
-            <Button
-                icon
-                positive
-                labelPosition='right'
-                onClick={props.advanceStep}
-                style={{width:'10vw'}}
-            >
-                Start
-                <Icon name='play circle outline' />
-            </Button>
-        );
-    }
-
-    if (step===3) {
-        prevButton = 
-        (<Button
-            disabled
-            icon
-            labelPosition='left'
-            onClick={props.reverseStep}
-            style={{width:'10vw'}}
-        >
-            Back
-            <Icon name='left arrow' />
-        </Button>);
-
-        nextButton = 
-        (<Button
-            primary
-            icon
-            labelPosition='right'
-            onClick={props.advanceStep}
-            style={{width:'10vw'}}
-        >
-            Home
-            <Icon name='home' />
-        </Button>);
-    }
-        
-    return (
-        <Button.Group>
-            {prevButton}
-            <Button.Or />
-            {nextButton}
-        </Button.Group>
-    );
-}
-
 function StepDisplay(props) {
     return (
         <Step.Group style={{width:'100%'}}>
@@ -156,14 +31,21 @@ function StepDisplay(props) {
                     <Step.Description>Job Name, Notifications, etc.</Step.Description>
                 </Step.Content>
             </Step>
-            <Step active={props.step===2}>
+            {props.selectedPipeline && props.selectedPipeline.input_json_schema!=={} ? <Step active={props.step===2}>
+                <Icon name='briefcase' />
+                <Step.Content>
+                    <Step.Title>Job Inputs</Step.Title>
+                    <Step.Description>Provide Any Required Information / Inputs</Step.Description>
+                </Step.Content>
+            </Step> : <></>}
+            <Step active={props.step===3}>
                 <Icon name='file text outline' />
                 <Step.Content>
                     <Step.Title>Documents</Step.Title>
                     <Step.Description>Upload Your Documents</Step.Description>
                 </Step.Content>
             </Step>
-            <Step active={props.step===3}>
+            <Step active={props.step===4}>
                 <Icon name='play' />
                 <Step.Content>
                     <Step.Title>Start</Step.Title>
@@ -176,34 +58,145 @@ function StepDisplay(props) {
 
 export const JobWizardSegment = (props) => {
     
-    const {pipelines, documents, jobs, results} = props;
+    const {pipelines, documents, jobs, results, selectedPipeline, selectedJob, job_input_json} = props;
     
-    let selectedJob = _.find(jobs.items, {id: jobs.selectedJobId});
-
     let steps={
-        0: <PipelineView 
-            pipelines={pipelines}
-            refreshPipelines={props.refreshPipelines}
-            handleSelectPipeline={props.handleSelectPipeline}
-            handleSetPipelineSearchString ={props.handleSetPipelineSearchString}
-            handlePipelinePageChange = {props.handlePipelinePageChange}/>,
-        1: <JobDetailsStep
-            handleJobFormChange={props.handleJobFormChange}
-            name={props.name}
-            notification_email={props.notification_email}/>,
-        2: <DocumentSelectionStep
-            documents={documents}
-            onDelete={props.handleDeleteDocument}
-            onDownload={props.handleDownloadDocument}
-            onUpload={props.handleUploadDocument}
-            handleSelectDocumentPage={props.handleSelectDocumentPage}
-            pages={document.pages}/>,
-        3: <JobStatusStep
-            handleUpdateJob = {props.handleUpdateJob}
-            handleDownloadResult = {props.handleDownloadResult}
-            selectedJob={selectedJob}
-            pipelines={pipelines}
-            results={results}/>
+        0: {
+            component:<PipelineView 
+                        pipelines={pipelines}
+                        refreshPipelines={props.refreshPipelines}
+                        handleSelectPipeline={props.handleSelectPipeline}
+                        handleSetPipelineSearchString ={props.handleSetPipelineSearchString}
+                        handlePipelinePageChange = {props.handlePipelinePageChange}/>,
+            prevButton: <Button
+                            primary
+                            icon
+                            labelPosition='left'
+                            onClick={props.reverseStep}
+                            style={{width:'10vw'}}
+                        >
+                            Home
+                            <Icon name='home' />
+                        </Button>,
+            nextButton:  <Button
+                            icon
+                            disabled={pipelines.selectedPipelineId===-1 ? 'disabled' : ''}
+                            positive
+                            labelPosition='right'
+                            onClick={props.advanceStep}
+                            style={{width:'10vw'}}
+                        >
+                            Next
+                            <Icon name='right arrow' />
+                        </Button> 
+            },
+        1:  {
+                component: <JobDetailsStep
+                                handleJobFormChange={props.handleJobFormChange}
+                                name={props.name}
+                                notification_email={props.notification_email}/>,
+                prevButton: <Button
+                                icon
+                                labelPosition='left'
+                                onClick={props.reverseStep}
+                                style={{width:'10vw'}}
+                            >
+                                Back
+                                <Icon name='left arrow' />
+                            </Button>,
+                nextButton:  <Button
+                                icon
+                                positive
+                                labelPosition='right'
+                                onClick={props.advanceStep}
+                                style={{width:'10vw'}}
+                            >
+                                Next
+                                <Icon name='right arrow' />
+                            </Button>
+            },
+        2:  {
+                component: <InputFormStep
+                                formData={job_input_json}
+                                input_schema_json={selectedPipeline? selectedPipeline.input_json_schema : {schema:{}, uischema:{}}}
+                                handleInputChange={props.handleJobInputChange}
+                            />,
+                prevButton: <Button
+                                icon
+                                labelPosition='left'
+                                onClick={props.reverseStep}
+                                style={{width:'10vw'}}
+                            >
+                                Back
+                                <Icon name='left arrow' />
+                            </Button>,
+                nextButton:  <Button
+                                icon
+                                positive
+                                labelPosition='right'
+                                onClick={props.advanceStep}
+                                style={{width:'10vw'}}
+                            >
+                                Next
+                                <Icon name='right arrow' />
+                            </Button>
+            },
+        3:  {
+                component: <DocumentSelectionStep
+                                documents={documents}
+                                onDelete={props.handleDeleteDocument}
+                                onDownload={props.handleDownloadDocument}
+                                onUpload={props.handleUploadDocument}
+                                handleSelectDocumentPage={props.handleSelectDocumentPage}
+                                pages={document.pages}/>,
+                prevButton: <Button
+                                icon
+                                labelPosition='left'
+                                onClick={props.reverseStep}
+                                style={{width:'10vw'}}
+                            >
+                                Back
+                                <Icon name='left arrow' />
+                            </Button>,
+                nextButton:  <Button
+                                icon
+                                positive
+                                labelPosition='right'
+                                onClick={props.advanceStep}
+                                style={{width:'10vw'}}
+                            >
+                                Next
+                                <Icon name='right arrow' />
+                            </Button>
+            },
+        4:  { 
+                component: <JobStatusStep
+                            handleUpdateJob = {props.handleUpdateJob}
+                            handleDownloadResult = {props.handleDownloadResult}
+                            selectedJob={selectedJob}
+                            pipelines={pipelines}
+                            results={results}/>,
+                prevButton: <Button
+                                disabled
+                                icon
+                                labelPosition='left'
+                                onClick={props.reverseStep}
+                                style={{width:'10vw'}}
+                            >
+                                Back
+                                <Icon name='left arrow' />
+                            </Button>,
+                nextButton: <Button
+                                primary
+                                icon
+                                labelPosition='right'
+                                onClick={props.advanceStep}
+                                style={{width:'10vw'}}
+                            >
+                                Home
+                                <Icon name='home' />
+                            </Button>
+            }
         };
 
     return (
@@ -219,10 +212,10 @@ export const JobWizardSegment = (props) => {
                         width: '100%'
                     }}>
                         <div style={{width:'100%', height: '10%', marginBottom: '10px'}}>
-                            <StepDisplay step={props.step}/>
+                            <StepDisplay step={props.step} selectedPipeline={selectedPipeline}/>
                         </div>
                         <div style={{height: '80%', width: '100%', flexGrow: 4, marginBottom: '10px'}}>
-                            {steps[props.step] ? steps[props.step] : <></>}
+                            {steps[props.step] ? steps[props.step].component : <></>}
                         </div>
                         <div style={{
                             display:'flex',
@@ -232,11 +225,11 @@ export const JobWizardSegment = (props) => {
                             width: '100%',
                             height: '10%'
                         }}>
-                            <NavButtons
-                                step={props.step}
-                                advanceStep={props.advanceStep}
-                                reverseStep={props.reverseStep}
-                            />
+                             <Button.Group>
+                                {steps[props.step] ? steps[props.step].prevButton : <></>}
+                                <Button.Or />
+                                {steps[props.step] ? steps[props.step].nextButton : <></>}
+                            </Button.Group>
                         </div>
                     </div>
                 </Segment>

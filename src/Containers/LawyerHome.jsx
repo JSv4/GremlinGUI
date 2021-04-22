@@ -63,6 +63,7 @@ class LawyerHome extends Component {
       view:'LANDING',
       name:'',
       notification_email:'',
+      job_input_json: {},
       timer:null,
       showResultModal:false
     };
@@ -81,15 +82,16 @@ class LawyerHome extends Component {
   tick = () => {
 
     //On the document step, refresh docs to show updates to extract.
-    if(this.state.step === 2) {
+    if(this.state.step === 3) {
       this.handleRefreshDocuments();
     } 
 
     //On the job step (final step), refresh results and job stat
-    if (this.state.step === 3 && this.props.jobs.selectedJobId!==-1) {
+    if (this.state.step === 4 && this.props.jobs.selectedJobId!==-1) {
       this.handleRefreshSelectedJob();
       this.handleFetchSummaryResults();
     }
+    //TODO - need to rewrite step handling... also, once job is created and we hit back... need to handle that.
   }
 
   toggleResultModal = () => {
@@ -124,6 +126,12 @@ class LawyerHome extends Component {
     });
   }
 
+  handleJobInputChange = (job_input_json) => {
+    this.setState({
+      job_input_json
+    });
+  }
+
   setHomeView = () => {
     Promise.all([
       this.props.dispatch(setJobSearchString("")),
@@ -152,41 +160,116 @@ class LawyerHome extends Component {
   }
 
   advanceStep = () => {
-    if (this.state.step===0){
-      this.setStep(this.state.step + 1);
-    }
-    else if (this.state.step===1) {
-      this.handleCreateJob({
-        name: this.state.name,
-        notification_email: this.state.notification_email,
-        pipeline: this.props.pipelines.selectedPipelineId
-      });
-    }
-    else if (this.state.step===2) {
-      this.handleStartSelectedJob();
-      this.setStep(this.state.step + 1);
-    }
-    else if (this.state.step===3) {
-      this.handleStartWizardOver()
-    }
+
+    const { jobs, pipelines } = this.props;
+
+    let selectedPipeline = null;
+    try {
+      selectedPipeline = _.find(pipelines.items, {id: pipelines.selectedPipelineId})
+    } catch {}
+
+    let selectedJob = null;
+    try {
+        selectedJob = _.find(jobs.items, {id: jobs.selectedJobId})
+    } catch {}
+
+    switch(this.state.step) {
+      case 1:
+
+        // If there's no input_json_schema... just skip the input page entirely 
+        // and advance by 2 instead of 1. 
+        if (selectedPipeline.input_json_schema==={}) {
+          
+          // In that case, create the job here. 
+          if(selectedJob) {
+            this.handleUpdateJob({
+              name: this.state.name,
+              notification_email: this.state.notification_email,
+              pipeline: this.props.pipelines.selectedPipelineId,
+              job_input_json: this.state.job_input_json
+            }).then(() => this.setStep(this.state.step + 2));
+          }
+          else {
+            this.handleCreateJob({
+              name: this.state.name,
+              notification_email: this.state.notification_email,
+              pipeline: this.props.pipelines.selectedPipelineId,
+              job_input_json: this.state.job_input_json
+            }).then(() => this.setStep(this.state.step + 2));
+          }
+
+        }
+        else{
+          this.setStep(this.state.step + 1);
+        }
+
+        break;
+      case 2:
+        if(selectedJob) {
+          this.handleUpdateJob({
+            name: this.state.name,
+            notification_email: this.state.notification_email,
+            pipeline: this.props.pipelines.selectedPipelineId,
+            job_input_json: this.state.job_input_json
+          }).then(() => this.setStep(this.state.step + 1));
+        }
+        else {
+          this.handleCreateJob({
+            name: this.state.name,
+            notification_email: this.state.notification_email,
+            pipeline: this.props.pipelines.selectedPipelineId,
+            job_input_json: this.state.job_input_json
+          }).then(() => this.setStep(this.state.step + 1));
+        }
+        break;
+      case 3:
+        this.handleUpdateJob({id: this.props.jobs.selectedJobId, queued: true}).then(() => {
+          this.setStep(this.state.step + 1);
+        });
+        break;
+      case 4:
+        this.handleStartWizardOver();
+        break;
+      default:
+        this.setStep(this.state.step + 1);
+    } 
   }
 
   reverseStep = () => {
-    if (this.state.step===0){
-      this.setHomeView();
+
+    const { jobs, pipelines } = this.props;
+
+    let selectedPipeline = null;
+    try {
+      selectedPipeline = _.find(pipelines.items, {id: pipelines.selectedPipelineId})
+    } catch {}
+
+    let selectedJob = null;
+    try {
+        selectedJob = _.find(jobs.items, {id: jobs.selectedJobId})
+    } catch {}
+
+    switch(this.state.step) {
+      case 0:
+        this.setHomeView();
+        break;
+      case 3:
+        if(selectedPipeline.input_json_schema==={}) {
+          this.setStep(this.state.step - 2);
+        } else {
+          this.setStep(this.state.step - 1);
+        }
+      default:
+        this.setStep(this.state.step - 1);
     }
-    else {
-      this.setStep(this.state.step - 1);
-    }
+
   }
 
   //Create a new job with fields in the jobObj. Then advance the wizard step to doc section.
   handleCreateJob = (jobObj) => {
-    this.props.dispatch(createJob(jobObj)).then((response) => {
-      this.props.dispatch(selectJob(response.id)).then(() => {
-        this.props.dispatch(loadFullPipeline(this.props.pipelines.selectedPipelineId)).then(() => {
-          this.setStep(2);
-        });
+    return this.props.dispatch(createJob(jobObj)).then((response) => {
+      return this.props.dispatch(selectJob(response.id)).then(() => {
+        return this.props.dispatch(loadFullPipeline(this.props.pipelines.selectedPipelineId));
       });
     });
   }
@@ -250,8 +333,8 @@ class LawyerHome extends Component {
     this.props.dispatch(fetchPipelines()); 
   }
 
-  handleUpdateJob = (updatedJobObj) => {
-    this.props.dispatch(updateJob(updatedJobObj));
+  handleUpdateJob = (updatedJobObj, callback) => {
+    return this.props.dispatch(updateJob(updatedJobObj));
   }
 
   handleDeleteJob = (jobId) => {
@@ -305,7 +388,12 @@ class LawyerHome extends Component {
       this.props.dispatch(unselectPipeline()),
     ]).then(() => {
       this.setHomeView();
-      this.setStep(0);
+      this.setState({
+        step:0,
+        name:'',
+        notification_email:'',
+        job_input_json: {},
+      });
     });
   }
 
@@ -331,15 +419,24 @@ class LawyerHome extends Component {
         selectedJob = _.find(jobs.items, {id: jobs.selectedJobId})
     } catch {}
 
+    let selectedPipeline = null;
+    try {
+      selectedPipeline = _.find(pipelines.items, {id: pipelines.selectedPipelineId})
+    } catch {}
+
     let view = <></>;
+
     if(this.state.view==='WIZARD') {
       view = <JobWizardSegment
                 pipelines={pipelines}
                 jobs={jobs}
                 documents={documents}
                 results={results}
+                job_input_json={this.state.job_input_json}
                 refreshPipelines={this.refreshPipelines}
                 handleUpdateJob={this.handleUpdateJob}
+                selectedPipeline={selectedPipeline}
+                selectedJob={selectedJob}
                 handleSetPipelineSearchString ={this.handleSetPipelineSearchString}
                 handleSelectPipeline={this.handleSelectPipeline}
                 handlePipelinePageChange ={this.handlePipelinePageChange}
@@ -352,6 +449,7 @@ class LawyerHome extends Component {
                 advanceStep={this.advanceStep}
                 reverseStep={this.reverseStep}
                 handleJobFormChange={this.handleJobFormChange}
+                handleJobInputChange={this.handleJobInputChange}
                 name={this.state.name}
                 notification_email={this.state.notification_email}
               />;

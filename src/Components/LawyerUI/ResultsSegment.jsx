@@ -28,7 +28,7 @@ export const ResultsSegment = (props) => {
             key={job.id}
             job={job}
             selected={jobs.selectedJobId===job.id}
-            onDownload={props.handleDownloadJob}
+            handleDownloadJob={props.handleDownloadJob}
             handleDeleteJob={props.handleDeleteJob}
             handleUpdateJob={props.handleUpdateJob}
             handleSelectJob={props.handleSelectJob}

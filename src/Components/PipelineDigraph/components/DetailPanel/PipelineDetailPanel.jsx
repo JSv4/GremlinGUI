@@ -19,7 +19,6 @@ import _ from 'lodash';
 import JobSettings from '../../../Shared/JobSettings';
 import { JobDocumentReadOnlyTab } from '../../../Shared/SidebarTabs';
 import PipelineMetaModel from '../Modals/PipelineMetaModal';
-import JsonViewer from '../../../Shared/JsonViewer';
 import EditInputModal from './EditInputModal';
 import { DocumentList } from '../../../Documents/DocumentList';
 import { JobStatusCol } from '../../../Shared/Controls';
