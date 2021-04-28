@@ -31,9 +31,9 @@ export default class JobSettings extends PureComponent {
         if (!this.props.job) return false;
         
         return (
-            this.props.job.job_inputs!==nextProps.job.job_inputs
+            this.props.job.job_input_json!==nextProps.job.job_input_json
             &&
-            this.state.jobSettingsStr!==nextProps.job.job_inputs
+            this.state.jobSettingsStr!==nextProps.job.job_input_json
         );
     }
 
@@ -50,7 +50,7 @@ export default class JobSettings extends PureComponent {
             delete updatedObj.pipeline;
         }
         
-        updatedObj.job_inputs=JSON.stringify(newJobInputs);
+        updatedObj.job_input_json=newJobInputs;
         return updatedObj;
     }
 

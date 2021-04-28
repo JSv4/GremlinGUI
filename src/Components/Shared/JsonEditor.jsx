@@ -39,7 +39,7 @@ export default class JsonEditor extends PureComponent {
     
     onChange = (newJobInputs) => {
         let updatedObj = {...this.props.job};
-        updatedObj.job_inputs=JSON.stringify(newJobInputs);
+        updatedObj.job_input_json=newJobInputs;
         this.props.handleUpdateObj(updatedObj);
     }
 

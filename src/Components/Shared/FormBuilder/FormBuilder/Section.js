@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Select from 'react-select';
-import { Alert, UncontrolledTooltip } from 'reactstrap';
 import {
   Accordion,
   Icon,
@@ -12,6 +11,7 @@ import {
   Segment,
   TextArea,
   Checkbox,
+  Message
 } from 'semantic-ui-react';
 import CardModal from './CardModal';
 import { CardDefaultParameterInputs } from './defaults/defaultInputs';
@@ -257,17 +257,16 @@ export default function Section({
                       />
                     </Form.Group>
                   </Form>
-                  <Alert
-                    style={{
-                      display: unsupportedFeatures.length === 0 ? 'none' : 'block',
-                    }}
-                    color='warning'
-                  >
-                    <h5>Unsupported Features:</h5>
-                    {unsupportedFeatures.map((message) => (
-                      <li key={`${path}_${message}`}>{message}</li>
-                    ))}
-                  </Alert>
+                  {
+                    unsupportedFeatures.length === 0 ? 
+                      <></> : 
+                      <Message warning>
+                        <Message.Header>Unsupported Features:</Message.Header>
+                        {unsupportedFeatures.map((message) => (
+                          <li key={`${path}_${message}`}>{message}</li>
+                        ))}
+                      </Message>   
+                  }
                 </Segment>
                 <Segment secondary raised attached='bottom'>
                   <div style={{

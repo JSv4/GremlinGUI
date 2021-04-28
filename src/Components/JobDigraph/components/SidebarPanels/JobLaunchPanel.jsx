@@ -24,7 +24,7 @@ export const JobLaunchPanel = (props) => {
 
     let input_data = {data:"No inputs provided..."};
     try {
-        input_data = JSON.parse(selectedJob.job_inputs);
+        input_data = selectedJob.job_input_json;
     } catch {}
     
     tabs = [

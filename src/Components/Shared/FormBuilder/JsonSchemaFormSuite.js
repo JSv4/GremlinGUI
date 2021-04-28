@@ -3,11 +3,16 @@ import React from 'react';
 import {
   Modal, 
   Message,
+  Label,
   Button,
   Tab,
-  Container
+  Container,
+  Segment,
+  Header,
+  Grid
 } from 'semantic-ui-react';
 
+import { LabelledFieldTemplate } from './CustomInputFields';
 import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
 
@@ -15,6 +20,86 @@ import Form from '@rjsf/semantic-ui';
 
 import FormBuilder from './FormBuilder/FormBuilder';
 import ErrorBoundary from './ErrorBoundary';
+
+// Override the default Array Field rendering as it is confusing as all hell, particularly when you have multiple
+// array entries and you have objects instead of simple primitive arrays. 
+function ArrayFieldTemplate(props) {
+  return (
+    <>  
+      <Segment.Group raised>
+        <Segment inverted color='grey'>
+          {props.title}
+        </Segment>
+        { props.items.map((element, index) => 
+          <Segment attached>
+            <div style={{
+              display:'flex', 
+              justifyContent:'center', 
+              flexDirection:'column',
+              width:'100%'
+            }}>
+              <div style={{
+                display:'flex', 
+                flexDirection:'row',
+                justifyContent: 'space-between',
+                width:'100%'
+              }}>
+                 <div style={{
+                    display:'flex', 
+                    justifyContent:'center', 
+                    flexDirection:'column',
+                    height:'100%',
+                    width:'100%'
+                  }}>
+                    <div>
+                      <Header as='h3'># {index+1})</Header>
+                    </div>
+                  </div>
+                <div style={{
+                  display:'flex', 
+                  justifyContent:'center', 
+                  flexDirection:'column',
+                  height:'100%',
+                  width:'100%'
+                }}>
+                  <div>
+                    {element.hasRemove ? 
+                        <Button
+                          floated='right'
+                          circular 
+                          color='red'
+                          icon='trash'
+                          onClick={element.onDropIndexClick(element.index)}
+                        />
+                        :
+                        <></>
+                      }
+                  </div>
+                </div>
+              </div>
+              <div style={{
+                display:'flex', 
+                flexDirection:'row',
+                justifyContent: 'space-between',
+                width:'100%',
+                paddingLeft:'2rem'
+              }}>
+                <div style={{width:'100%'}}>
+                  {element.children}
+                </div>
+              </div>
+            </div>  
+          </Segment>)
+        }
+        {
+          props.canAdd ? <Segment attached='bottom'>
+                          <Button onClick={props.onAddClick}>Add {props.title}</Button>
+                        </Segment> : <></>
+        }
+      </Segment.Group>
+    </>
+  );
+}
 
 class JsonSchemaFormEditor extends React.Component {
   constructor(props) {
@@ -45,18 +130,8 @@ class JsonSchemaFormEditor extends React.Component {
   }
 
   // update the internal form data state
-  updateFormData(text) {
-    try {
-      const data = JSON.parse(text);
-      this.setState({
-        formData: data,
-        schemaFormErrorFlag: '',
-      });
-    } catch (err) {
-      this.setState({
-        schemaFormErrorFlag: err.toString(),
-      });
-    }
+  updateFormData(formData) {
+      this.setState({formData});
   }
 
   render() {
@@ -64,6 +139,11 @@ class JsonSchemaFormEditor extends React.Component {
     const schemaError = '';
     const schemaUiError = '';
 
+    const widgets = {
+      DateTimeWidget: LabelledFieldTemplate,
+      DateWidget: LabelledFieldTemplate
+    };
+    
     const panes = [
       {
         menuItem: 'Form Builder',
@@ -102,28 +182,17 @@ class JsonSchemaFormEditor extends React.Component {
                           errMessage='Error parsing JSON Schema'
                         >
                           <Form
-                            schema={
-                              schemaError === '' ? JSON.parse(this.props.schema) : {}
-                            }
-                            uiSchema={
-                              schemaUiError === ''
-                                ? JSON.parse(this.props.uischema)
-                                : {}
-                            }
+                            ArrayFieldTemplate={ArrayFieldTemplate}
+                            widgets={widgets}
+                            schema={this.props.schema}
+                            uischema={this.props.uischema}
                             onChange={(formData) =>
-                              this.updateFormData(JSON.stringify(formData.formData))
+                              this.updateFormData(formData.formData)
                             }
                             formData={this.state.formData}
-                            submitButtonMessage={'Submit'}
-                            onSubmit={(submissionData) => {
-                              // below only runs if validation succeeded
-                              this.setState({
-                                validFormInput: true,
-                                outputToggle: true,
-                                submissionData,
-                              });
-                            }}
-                          />
+                          >
+                            <></>
+                          </Form>
                         </ErrorBoundary>
                         <Modal
                           open={this.state.outputToggle}>
@@ -187,7 +256,7 @@ class JsonSchemaFormEditor extends React.Component {
                             <JSONInput
                               id='data_schema'
                               placeholder={
-                                this.props.schema ? JSON.parse(this.props.schema) : {}
+                                this.props.schema ? this.props.schema : {}
                               }
                               locale={locale}
                               height='550px'
@@ -214,7 +283,7 @@ class JsonSchemaFormEditor extends React.Component {
                               id='ui_schema'
                               placeholder={
                                 this.props.uischema
-                                  ? JSON.parse(this.props.uischema)
+                                  ? this.props.uischema
                                   : {}
                               }
                               locale={locale}

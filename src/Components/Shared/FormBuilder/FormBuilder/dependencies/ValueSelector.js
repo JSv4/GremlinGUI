@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { Input } from 'reactstrap';
+import { Input } from 'semantic-ui-react';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import CardEnumOptions from '../CardEnumOptions';
 import CardSelector from './CardSelector';

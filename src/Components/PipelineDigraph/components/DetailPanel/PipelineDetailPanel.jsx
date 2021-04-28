@@ -243,7 +243,7 @@ export class PipelineDetailPanel extends PureComponent {
 
                 let input_data = {data:"No inputs provided..."};
                 try {
-                    input_data = JSON.parse(test_job.job_inputs);
+                    input_data = test_job.job_input_json;
                 } catch {}
 
                 tabs.push(
@@ -323,11 +323,22 @@ export class PipelineDetailPanel extends PureComponent {
                     <PipelinePanelHeader selectedPipeline={selectedPipeline}/>
                     {tabs[sidebarTab]}
                 </div>
-                <EditInputModal
-                    open={this.state.showFormEditor}
-                    setOpen={this.setShowFormEditor}
-                    saveSchema={(data)=>this.onPipelineInputSchemaChange(data)}
-                />
+                {
+                    this.state.showFormEditor ?
+                    <EditInputModal
+                        schema={selectedPipeline && selectedPipeline.input_json_schema ? 
+                                    selectedPipeline.input_json_schema : 
+                                    {
+                                        schema: {},
+                                        uischema: {}
+                                    }
+                        }
+                        open={this.state.showFormEditor}
+                        setOpen={this.setShowFormEditor}
+                        saveSchema={(data)=>this.onPipelineInputSchemaChange(data)}
+                    /> : <></>
+                }
+                
             </Segment>
         );
     }
