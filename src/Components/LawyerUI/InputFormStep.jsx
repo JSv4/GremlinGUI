@@ -21,7 +21,7 @@ export const InputFormStep = (props) => {
         <Segment style={{width:'100%', height:'100%', overflowY: 'scroll', backgroundColor:'#f3f4f5'}}>
             <Form
                 schema={input_schema_json.schema}
-                uiSchema={input_schema_json.uiSchema}
+                uiSchema={input_schema_json.uischema}
                 onChange={(formData) => {
                     console.log("formData: ", formData.formData);
                     handleInputChange(formData.formData);
