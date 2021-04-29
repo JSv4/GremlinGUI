@@ -34,7 +34,6 @@ export function ArrayFieldTemplate(props) {
                     justifyContent:'center', 
                     flexDirection:'column',
                     height:'100%',
-                    width:'100%'
                   }}>
                     <div>
                       <Header as='h3'># {index+1})</Header>
@@ -45,7 +44,6 @@ export function ArrayFieldTemplate(props) {
                   justifyContent:'center', 
                   flexDirection:'column',
                   height:'100%',
-                  width:'100%'
                 }}>
                   <div>
                     {element.hasRemove ? 
